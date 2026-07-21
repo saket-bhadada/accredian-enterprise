@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { Check, Mail, ArrowRight, Loader2 } from "lucide-react";
+import { useState, FormEvent, useRef } from "react";
+import { Check, Mail, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import Reveal from "./Reveal";
+import { TEAM_SIZES } from "@/lib/schema";
 
 const BENEFITS = [
   "Free 30-min platform walkthrough with your use case",
@@ -11,24 +12,75 @@ const BENEFITS = [
   "No commitment, no spam — just a conversation",
 ];
 
-const TEAM_SIZES = [
-  "1 – 10 employees",
-  "11 – 50 employees",
-  "51 – 200 employees",
-  "201 – 500 employees",
-  "501 – 1,000 employees",
-  "1,000+ employees",
-];
-
-type Status = "idle" | "submitting" | "done";
+type Status = "idle" | "submitting" | "done" | "error";
 
 export default function Contact() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
-    window.setTimeout(() => setStatus("done"), 900);
+    setErrorMessage("");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const payload = {
+      name: data.get("name") as string,
+      email: data.get("email") as string,
+      company: data.get("company") as string,
+      teamSize: data.get("teamSize") as string,
+      message: (data.get("message") as string) || undefined,
+      website: (data.get("website") as string) || undefined,
+    };
+
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setStatus("done");
+        return;
+      }
+
+      if (res.status === 429) {
+        setErrorMessage(
+          "Too many requests — please try again in a few minutes."
+        );
+        setStatus("error");
+        return;
+      }
+
+      if (res.status === 400) {
+        const body = await res.json();
+        if (body.errors) {
+          const messages = Object.entries(body.errors)
+            .map(
+              ([field, msgs]) =>
+                `${field}: ${(msgs as string[]).join(", ")}`
+            )
+            .join(". ");
+          setErrorMessage(messages);
+        } else {
+          setErrorMessage(body.error ?? "Please check your inputs.");
+        }
+        setStatus("error");
+        return;
+      }
+
+      setErrorMessage("Something went wrong. Please try again or email us directly.");
+      setStatus("error");
+    } catch {
+      setErrorMessage(
+        "Something went wrong. Please try again or email us directly."
+      );
+      setStatus("error");
+    }
   }
 
   return (
@@ -91,7 +143,51 @@ export default function Contact() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+                  {status === "error" && (
+                    <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                      <AlertCircle
+                        size={16}
+                        className="text-red-500 shrink-0 mt-0.5"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] text-red-700 leading-relaxed">
+                          {errorMessage}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setStatus("idle")}
+                          className="mt-1 text-[12px] font-semibold text-red-600 hover:text-red-800 underline underline-offset-2"
+                        >
+                          Try again
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Honeypot — visually hidden, focusable-by-bots only */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      top: "-9999px",
+                      width: "1px",
+                      height: "1px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <label>
+                      Website
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </label>
+                  </div>
+
                   <div className="grid sm:grid-cols-2 gap-5">
                     <Field label="Full Name" required>
                       <input
