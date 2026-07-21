@@ -12,7 +12,7 @@ const STATS = [
 
 export default function StatsBar() {
   return (
-    <section className="bg-navy border-y border-line-dark">
+    <section className="bg-navy bg-ledger border-y border-line-dark">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
         <Reveal>
           <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-gold-soft mb-2">

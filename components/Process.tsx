@@ -33,6 +33,8 @@ const STEPS = [
   },
 ];
 
+const STEP_ROTATIONS = ["-2deg", "1deg", "-1.5deg", "2deg"];
+
 function StepCard({ s, i }: { s: (typeof STEPS)[number]; i: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -53,13 +55,20 @@ function StepCard({ s, i }: { s: (typeof STEPS)[number]; i: number }) {
     <Reveal key={s.n} delay={i * 90} className="bg-ink h-full">
       <div ref={cardRef} className="h-full p-7 lg:p-6 flex flex-col">
         <motion.span
-          className="font-mono text-[13px] font-semibold text-indigo-soft mb-6 inline-block"
-          style={
-            prefersReducedMotion
-              ? undefined
-              : { scale, color }
-          }
+          className="relative font-mono text-[13px] font-semibold text-indigo-soft mb-6 inline-block"
+          style={{
+            rotate: STEP_ROTATIONS[i],
+            ...(prefersReducedMotion ? {} : { scale, color }),
+          }}
         >
+          {/* Misregistered shadow copy — stamped ink impression */}
+          <span
+            aria-hidden="true"
+            className="absolute top-[1.5px] left-[1.5px] font-mono text-[13px] font-semibold opacity-40"
+            style={{ color: "var(--color-stamp-soft)" }}
+          >
+            {s.n}
+          </span>
           {s.n}
         </motion.span>
         <h3 className="font-display text-[16px] font-semibold text-paper mb-3">

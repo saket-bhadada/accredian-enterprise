@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { GraduationCap, Zap, BarChart3, Play, ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import Counter from "./Counter";
+import VerifiedSeal from "./VerifiedSeal";
 import { useInView } from "@/lib/useInView";
 
 const TRACKS = [
@@ -121,31 +122,7 @@ export default function Hero() {
 
         {/* Right column — signature dashboard widget */}
         <div ref={ref} className="relative">
-          <div className="absolute -top-6 -left-6 z-20 hidden sm:flex items-center gap-2 rounded-xl border border-line-dark bg-navy px-3.5 py-2.5 shadow-xl shadow-black/30">
-            <span className="text-base leading-none">🎓</span>
-            <div>
-              <p className="text-[11px] font-semibold text-paper leading-tight">
-                IIT Certified
-              </p>
-              <p className="text-[10px] text-mist leading-tight">
-                500+ Programs
-              </p>
-            </div>
-          </div>
-
-          <div className="absolute -bottom-5 -right-4 z-20 hidden sm:flex items-center gap-2 rounded-xl border border-line-dark bg-navy px-3.5 py-2.5 shadow-xl shadow-black/30">
-            <span className="grid place-items-center w-6 h-6 rounded-full bg-indigo/20 text-indigo-soft text-[11px] font-bold">
-              ✓
-            </span>
-            <div>
-              <p className="text-[11px] font-semibold text-paper leading-tight">
-                98% Satisfaction
-              </p>
-              <p className="text-[10px] text-mist leading-tight">
-                Learner NPS Score
-              </p>
-            </div>
-          </div>
+          <VerifiedSeal className="absolute -top-5 -left-5 z-20 hidden sm:block" />
 
           <div className="relative rounded-2xl border border-line-dark bg-navy/90 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
             <div className="flex items-center justify-between mb-6">

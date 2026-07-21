@@ -15,6 +15,8 @@
   --color-gold-soft: #f0d9a8;
   --color-indigo: #4a5ae8;       /* tech accent — data viz, links */
   --color-indigo-soft: #8a93f5;
+  --color-stamp: #8b342a;        /* muted brick/oxblood — stamp motif only */
+  --color-stamp-soft: rgba(139, 52, 42, 0.14);
 
   /* ---- Fonts ---- */
   --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
@@ -96,4 +98,31 @@ select:focus-visible {
 
 .bg-noise {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* Seal badge — slow continuous rotation */
+@keyframes spin-seal {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.seal-rotate {
+  animation: spin-seal 60s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal-rotate {
+    animation: none;
+  }
+}
+
+/* Ledger ruled-paper texture — faint horizontal lines */
+.bg-ledger {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 23px,
+    rgba(245, 243, 240, 0.045) 23px,
+    rgba(245, 243, 240, 0.045) 24px
+  );
 }

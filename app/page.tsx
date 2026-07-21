@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import ScrollProgress from "@/components/ScrollProgress";
 import Hero from "@/components/Hero";
+import TornEdge from "@/components/TornEdge";
 import StatsBar from "@/components/StatsBar";
 import Capabilities from "@/components/Capabilities";
 import Process from "@/components/Process";
@@ -16,6 +17,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <TornEdge />
         <StatsBar />
         <Capabilities />
         <Process />

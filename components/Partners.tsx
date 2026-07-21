@@ -25,7 +25,12 @@ const ROW_2 = [
 
 function LogoPill({ mark, name, tag }: { mark: string; name: string; tag: string }) {
   return (
-    <div className="flex items-center gap-3 shrink-0 rounded-xl border border-line-dark bg-navy px-5 py-3.5 mx-2.5">
+    <div
+      className="flex items-center gap-3 shrink-0 border border-line-dark bg-navy px-5 py-3.5 mx-2.5 border-l-2 border-l-gold"
+      style={{
+        clipPath: "polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)",
+      }}
+    >
       <span className="grid place-items-center w-9 h-9 rounded-lg bg-ink text-[11px] font-mono font-semibold text-gold-soft shrink-0">
         {mark}
       </span>
@@ -33,7 +38,7 @@ function LogoPill({ mark, name, tag }: { mark: string; name: string; tag: string
         <p className="text-[13px] font-medium text-paper leading-tight whitespace-nowrap">
           {name}
         </p>
-        <p className="text-[10px] text-mist leading-tight mt-0.5">{tag}</p>
+        <p className="text-[10px] font-mono text-mist leading-tight mt-0.5">{tag}</p>
       </div>
     </div>
   );
